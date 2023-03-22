@@ -7,7 +7,7 @@ const authorizeApplication = () => {
 
 // TODO #3.1: Change group number
 const getGroupNumber = () => {
-  return 99;
+  return 10;
 };
 
 // Example: Send Get user profile ("GET") request to backend server and show the response on the webpage
@@ -36,10 +36,25 @@ const getUserProfile = async () => {
 // TODO #3.3: Send Get Courses ("GET") request to backend server and filter the response to get Comp Eng Ess CV_cid
 //            and display the result on the webpage
 const getCompEngEssCid = async () => {
-  document.getElementById("ces-cid-value").innerHTML = "";
-  console.log(
-    "This function should fetch 'get courses' route from backend server and find cv_cid value of Comp Eng Ess."
-  );
+  let itemsData;
+  const options = {
+    method: "GET",
+    credentials: "include",
+  };
+  await fetch(`http://${backendIPAddress}/courseville/get_courses`, options)
+    .then((response) => response.json())
+    .then((data) => {
+      itemsData = data;
+    })
+    .catch((error) => console.error(error));
+  console.log(itemsData);
+  const cid = document.getElementById("ces-cid-value");
+  cid.innerHTML = "";
+  itemsData.data.student.map((item) => {
+    if (item.course_no === "2110221") {
+      cid.innerHTML = item.cv_cid
+    }
+  });
 };
 
 // TODO #3.5: Send Get Course Assignments ("GET") request with cv_cid to backend server
